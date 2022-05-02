@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ScrumBoard
 {
-    internal class Board
+    public class Board
     {
         private const int _columnLimit = 10;
         public string BoardName { get; }
@@ -17,6 +17,16 @@ namespace ScrumBoard
         {
             BoardName = name;
             _columns = new List<BoardColumn>();
+        }
+
+        public int GetCountColumns()
+        {
+            return _columns.Count;
+        }
+
+        public BoardColumn? GetColumn(string name)
+        {
+            return _columns.Find(col => col.Name == name);
         }
         
         public void AddColumn(string name)
@@ -31,16 +41,27 @@ namespace ScrumBoard
             }
         }
 
-        public void AddObjective(string name, string description, PriorytyType prioryty)
+        public bool AddObjective(string name, string description, PriorytyType prioryty)
         {
+            if (_columns.Count() == 0) return false;
             _columns[0].AddObjective(name, description, prioryty);
+            return true;
         }
 
-        public void MoveObjective(string nameColumn, string nameObjective, string targetColumn)
+        public bool MoveObjective(string nameColumn, string nameObjective, string targetColumn)
         {
-            Objective Obj = _columns.Find(Col => Col.Name == nameColumn).GetObjective(nameObjective);
-            _columns.Find(Col => Col.Name == nameColumn).RemoveObjective(nameObjective);
-            _columns.Find(Col => Col.Name == targetColumn).AddObjective(Obj.Name, Obj.Description, Obj.Priority);
+            var column = _columns.Find(Col => Col.Name == nameColumn);
+            if(column == null) return false;
+
+            var objective = column.GetObjective(nameObjective);
+            if(objective == null) return false;
+
+            var targetCol = _columns.Find(Col => Col.Name == targetColumn);
+            if(targetCol == null) return false;
+
+            column.RemoveObjective(nameObjective);
+            targetCol.AddObjective(objective.Name, objective.Description, objective.Priority);
+            return true;
         }
 
         public void ShowBoard()

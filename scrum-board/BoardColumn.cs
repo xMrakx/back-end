@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ScrumBoard
 {
-    internal class BoardColumn
+    public class BoardColumn
     {
         public string Name { get;}
         private List<Objective> _objectives;
@@ -27,15 +27,21 @@ namespace ScrumBoard
            _objectives.Add(new Objective(name, description, prioryty));
         }
 
-        public Objective GetObjective(string name)
+        public Objective? GetObjective(string name)
         {
             return _objectives.Find(Obj => Obj.Name == name);
         }
                 
 
-        public void RemoveObjective(string name)
+        public bool RemoveObjective(string name)
         {
-            _objectives.RemoveAt(_objectives.IndexOf(_objectives.Find(Obj => Obj.Name == name)));
+            var obj = _objectives.Find(Obj => Obj.Name == name);
+            if (obj != null)
+            {
+                _objectives.RemoveAt(_objectives.IndexOf(obj));
+                return true;
+            }
+            return false;
         }
 
         public void ShowObjectives()
@@ -52,3 +58,4 @@ namespace ScrumBoard
         
     }
 }
+

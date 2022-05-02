@@ -15,12 +15,12 @@ namespace ScrumBoard
         High
     }
 
-    internal class Objective
+    public class Objective
     {
         public string Name { get; }
         public string Description { get; }
-        
-        public PriorytyType Priority;
+
+        public PriorytyType Priority { get; }
 
         public Objective(string name, string description, PriorytyType prioryty)
         {
